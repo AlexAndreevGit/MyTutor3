@@ -1,5 +1,5 @@
 
-# MyTutor2
+# MyTutor3
 ![Image](https://github.com/user-attachments/assets/b581cf6c-34e2-4da4-ada4-e763a72a7b5b)
 
 ## Link
@@ -20,12 +20,11 @@ MyTutor2 is built using modern technologies:
 
 - **Backend**
     - Java
-    - Spring Framework
+    - Spring Boot
     - SQL database
 
 - **Frontend**
-    - HTML, CSS & JavaScript
-    - Thymeleaf template engine
+    - React, HTML, CSS 
     - Responsive design principles
 
 ## Entity Relationship Diagram (ERD)
