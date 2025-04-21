@@ -24,7 +24,7 @@ MyTutor2 is built using modern technologies:
     - SQL database
 
 - **Frontend**
-    - React, HTML, CSS 
+    - React, JavaScript, HTML, CSS 
     - Responsive design principles
 
 ## Entity Relationship Diagram (ERD)
