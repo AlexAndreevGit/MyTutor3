@@ -46,7 +46,7 @@ function Login() {
 
                 <div
                     className="alert alert-danger"    // "alert alert-danger": These are two Bootstrap CSS classes.
-                    role="alert"
+                    // role="alert"
                     style={{display: isLoginError ? 'block' : 'none'}}
                 >
                     Invalid username or password. Please try again.
