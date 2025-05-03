@@ -1,94 +1,79 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, {useState, useEffect} from 'react';
+import {addCsrfTokenToForm} from "./Utils";
+
 
 function TutorialAdd() {
-    const [formData, setFormData] = useState({      //object formData with 4 fields/parameters
+
+    const [formData, setFormData] = useState({
         name: '',
         description: '',
         price: '',
-        category: ''
-    });
-    const [errors, setErrors] = useState({});
-    const [categories, setCategories] = useState([]);
-    const navigate = useNavigate();
+        category: '',
+    })
 
-    // Fetch categories when component mounts
+    const [errors, setErrors] = useState({})
+    const [categoies, setCategories] = useState([])
+
     useEffect(() => {
+
         fetch('/api/tutorials/categories')
-            .then(response => response.json())
+            .then(result => result.json())
             .then(data => {
-                setCategories(data);
-            })
-            .catch(error => {
-                console.error('Error fetching categories:', error);
-            });
+                setCategories(data)
+            }).catch(error => {
+            console.error("Error fetching categories: ", error)
+        })
 
-        // Also fetch CSRF token for form submission
-        fetch('/api/csrf')
-            .then(response => response.json())
-            .then(data => {
+        addCsrfTokenToForm("formID");
 
-                console.log(data)
-                //
-                const form = document.querySelector('form[action="/tutorials/add"]');
-                if (form && data.token) {
 
-                    // Remove any existing CSRF input
-                    const existingCsrf = form.querySelector(`input[name="${data.parameterName}"]`);
-                    if (existingCsrf) existingCsrf.remove();
-
-                    // Add new CSRF input
-                    const csrfInput = document.createElement('input');
-                    csrfInput.type = 'hidden';
-                    csrfInput.name = data.parameterName;
-                    csrfInput.value = data.token;
-                    form.appendChild(csrfInput);
-                }
-            })
-            .catch(error => console.error('Could not fetch CSRF token:', error));
     }, []);
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
+    function handleChange(event) {
+
+
+        const inputFieldName = event.target.name;
+        const inputFieldValue = event.target.value;
+
         setFormData({
+
             ...formData,
-            [name]: value
-        });
+            [inputFieldName]: inputFieldValue
 
-        // Clear error when user starts typing
-        if (errors[name]) {
-            setErrors({
-                ...errors,
-                [name]: null
-            });
-        }
-    };
+        })
 
-    const validateForm = () => {
-        const newErrors = {};
 
-        if (!formData.name || formData.name.length < 2 || formData.name.length > 40) {
-            newErrors.name = 'The name length must be between 2 and 40 characters!';
+
+    }
+
+    const validateForm = () => {   //anonymous function. function without name
+        const newErrors = {}
+
+        if (!formData.name || formData.name.length < 2 || formData.name.length > 40) {  //!formData.name is empty, null, undefined or 0
+            newErrors.name = 'The name length must be between 2 and 40 characters!'
         }
 
         if (!formData.description || formData.description.length < 2 || formData.description.length > 200) {
-            newErrors.description = 'The description length must be between 2 and 200 characters!';
+            newErrors.description = 'The description length must be between 2 and 200 characters!'
         }
 
-        if (!formData.price || isNaN(formData.price) || parseFloat(formData.price) <= 0) {
-            newErrors.price = 'The price should be a positive number!';
+        if (!formData.price || isNaN(formData.price) || formData.price <= 0) {     //isNan is not a number
+            newErrors.price = 'The price should be a positive number'
         }
 
         if (!formData.category) {
-            newErrors.category = 'Please select a category for your offer.';
+            newErrors.category = 'Please set a category for your offer.'
         }
 
-        setErrors(newErrors);
-        return Object.keys(newErrors).length === 0;
-    };
+        setErrors(newErrors)
+        return Object.keys(newErrors).length === 0 //in React "===" compare value end type
+
+    }
+
 
     return (
-        <main className="container py-4">
+        <main className="container py-4" >
+
             <div className="form-container">
                 <div className="form-icon">
                     <i className="fas fa-chalkboard-teacher"></i>
@@ -99,51 +84,55 @@ function TutorialAdd() {
                     <p className="form-subtitle">Share your expertise with students who need your help</p>
                 </div>
 
-                <form action="/tutorials/add" method="POST">
+                <form id='formID' action="/tutorials/add" method="POST">
+
                     <div className="form-group">
-                        <label className="form-label" htmlFor="offerName">Name</label>
+                        <label className="form-label">Offer Name</label>
                         <input
                             type="text"
-                            className={`form-control ${errors.name ? 'is-invalid' : ''}`}
-                            id="offerName"
-                            name="name"
-                            placeholder="Name your tutoring offer"
+                            className={`form-control ${errors.name ? 'is-invalid' : ''}`}    // ```define the template library, ${...} embedded a JS expression
+                            name="name"                                                     //have to be the same as in the DTO
+                            placeholder="Name your tutoring offer"                          // ""-static string, {}-dynamic string
                             value={formData.name}
                             onChange={handleChange}
                         />
+
                         {errors.name && (
-                            <small className="invalid-feedback">{errors.name}</small>
+                            <small className='invalid-feedback'>{errors.name}</small>
                         )}
+
                     </div>
 
                     <div className="form-group">
-                        <label className="form-label" htmlFor="offerDescription">Offer Description</label>
-                        <textarea
-                            className={`form-control ${errors.description ? 'is-invalid' : ''}`}
-                            id="offerDescription"
-                            name="description"
-                            rows="3"
-                            placeholder="Describe what you can help with"
+                        <label className="form-label">Offer Description</label>
+                        <input
+                            type="text"
+                            className={`form-control ${errors.description ? 'is-invalid' : ''}`}    // ```define the template library, ${...} embedded a JS expression
+                            name="description"                                                     //have to be the same as in the DTO
+                            placeholder="Describe what you can help with"                          // ""-static string, {}-dynamic string
                             value={formData.description}
                             onChange={handleChange}
-                        ></textarea>
+                        />
+
                         {errors.description && (
-                            <small className="invalid-feedback">{errors.description}</small>
+                            <small className='invalid-feedback'>{errors.description}</small>
                         )}
+
                     </div>
 
                     <div className="form-group">
-                        <label className="form-label" htmlFor="offerPrice">Price Per Hour</label>
+                        <label className="form-label">Price Per Hour</label>
+                        {/*input-group - Bootstrap to put the both in the same row*/}
                         <div className="input-group">
                             <input
                                 type="text"
                                 className={`form-control ${errors.price ? 'is-invalid' : ''}`}
-                                id="offerPrice"
                                 name="price"
                                 placeholder="Enter your hourly rate"
                                 value={formData.price}
                                 onChange={handleChange}
                             />
+                            {/* only a self closing tag because <input> is a void element in HTML. It does not have any child element*/}
                             <span className="input-group-text">EUR</span>
                         </div>
                         {errors.price && (
@@ -152,44 +141,54 @@ function TutorialAdd() {
                     </div>
 
                     <div className="form-group">
-                        <label className="form-label" htmlFor="offerCategory">Category</label>
+                        <label className="form-label">Category</label>
+                        {/*Select is a drop-down menu*/}
                         <select
-                            className={`form-select ${errors.category ? 'is-invalid' : ''}`}
-                            id="offerCategory"
+                            className={`form-control ${errors.category ? 'is-invalid' : ''}`}
                             name="category"
                             value={formData.category}
                             onChange={handleChange}
                         >
                             <option value="">Select a category</option>
-                            {categories.map(category => (
+                            {/*<option key="MATHEMATICS" value="MATHEMATICS">MATHEMATICS</option>*/}
+                            {/*<option key="INFORMATICS" value="INFORMATICS">INFORMATICS</option>*/}
+                            {/*<option key="OTHER" value="OTHER">OTHER</option>*/}
+
+                            {/*In react the key prop is crucial when rendering list elements.*/}
+                            {/*The key gives each item unique identity*/}
+                            {categoies.map((category) => (
                                 <option key={category} value={category}>
                                     {category}
                                 </option>
                             ))}
+
                         </select>
-                        {errors.category && (
-                            <small className="invalid-feedback">{errors.category}</small>
-                        )}
+                        {
+                            errors.category && (
+                                <small className="invalid-feedback">{errors.category}</small>
+                            )}
                     </div>
 
                     <div className="form-actions">
                         <button
                             type="submit"
                             className="btn-submit"
-                            onClick={(e) => {
-                                e.preventDefault();
+                            onClick={(event) => {
+                                event.preventDefault()
                                 if (validateForm()) {
-                                    e.target.closest('form').submit();
+                                    console.log("Im here")
+                                    event.target.closest('form').submit()
                                 }
                             }}
                         >
-                            <i className="fas fa-plus-circle me-2"></i> Create Offer
+                            <i className="fas fa-plus-circle me-2"> Create Offer</i>
                         </button>
                     </div>
+
                 </form>
             </div>
         </main>
-    );
+    )
 }
 
 export default TutorialAdd;
