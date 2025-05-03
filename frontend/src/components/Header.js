@@ -2,7 +2,6 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 function Header({ isAuthenticated, isAdmin, handleLogout }) {
-    // const navigate = useNavigate();
 
     return (
         <header>
@@ -20,9 +19,8 @@ function Header({ isAuthenticated, isAdmin, handleLogout }) {
                         </Link>
                     </li>
 
-                    {/* The content of the li tag will be shown only if the first condition (isAuthenticated) is true*/}
+
                     {isAuthenticated && (
-                        // Empty element because in react we need to have only one parent element and teh other elements are children of this element.
                         <>
                             <li className="nav-item">
                                 <Link className="nav-link-button" to="/tutorials/add">
@@ -81,6 +79,7 @@ function Header({ isAuthenticated, isAdmin, handleLogout }) {
                     )}
                 </ul>
 
+
                 <div className="d-flex">
                     <ul className="navbar-nav">
                         {!isAuthenticated ? (
@@ -106,6 +105,7 @@ function Header({ isAuthenticated, isAdmin, handleLogout }) {
                         )}
                     </ul>
                 </div>
+
             </nav>
 
         </header>

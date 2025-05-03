@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 
 
-function TutorialsOffersList({category}) {  //"{}" example for destructuring
+function TutorialsOffersList({category}) {
 
     const [tutorials, setTutorials] = useState([]);
     const [pageTitle, setPageTitle] = useState('');

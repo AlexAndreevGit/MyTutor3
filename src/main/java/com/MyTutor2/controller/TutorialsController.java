@@ -5,7 +5,6 @@ import com.MyTutor2.exceptions.CategoryNotFoundException;
 import com.MyTutor2.exceptions.TutorialNotFoundException;
 import com.MyTutor2.exceptions.UserNotFoundException;
 import com.MyTutor2.model.DTOs.TutorialAddDTO;
-import com.MyTutor2.model.DTOs.TutorialViewDTO;
 import com.MyTutor2.service.OpenAIService;
 import com.MyTutor2.service.TutorialsService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -14,18 +13,16 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import jakarta.validation.Valid;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
 @Controller
-@RequestMapping("/tutorials")   ///tutorials/ask-question
+@RequestMapping("/tutorials")
 public class TutorialsController {
 
     private TutorialsService tutorialsService;
@@ -36,27 +33,28 @@ public class TutorialsController {
         this.openAIService = openAIService;
     }
 
+    //We need it if I dont navigate through the buttons. For example if I share a link
     @GetMapping("/add")
-    public String addTutorial(HttpServletRequest request) {
+    public String addTutorial() {
         return "forward:/index.html";
     }
 
-    //Populating the model with data to be made available to the view before rendering
-    @ModelAttribute("tutorialAddDTO")
-    public TutorialAddDTO initTutorialAddDTO() {
-        return new TutorialAddDTO();
-    }
 
+//    @ModelAttribute("tutorialAddDTO")
+//    public TutorialAddDTO initTutorialAddDTO() {
+//        return new TutorialAddDTO();
+//    }
 
-    //@Valid TutorialAddDTO tutorialAddDTO - we make a validation. Validate that the submitted input information fulfill the DTO(@Size(), @NotNull, @Positiv ) validation criteria
+    //React is sending a JSON payload and spring is mapping it to the parameter TutorialAddDTO. Same names in the JSON and in the fields in the DTO
     @PostMapping("/add")
-    public String createTutorial(@AuthenticationPrincipal UserDetails userDetails,  // source: Spring security
-                                 @Valid TutorialAddDTO tutorialAddDTO,              // source: HTTP request
-                                 BindingResult bindingResult,                       // source: Spring MVC
-                                 RedirectAttributes redirectAttributes) throws UserNotFoundException, CategoryNotFoundException {           // source: Spring MVC
+    public String createTutorial(@AuthenticationPrincipal UserDetails userDetails,
+                                 @Valid TutorialAddDTO tutorialAddDTO,
+                                 BindingResult bindingResult,
+                                 RedirectAttributes redirectAttributes) throws UserNotFoundException, CategoryNotFoundException {
 
 
-        //BindingResult bindingResult - through bindingResult we can access the result(errors) from the validation
+        //Second validation different from the on in React if I import tutorials
+        //bindingResult - through bindingResult we can access the result(errors) from the validation
         if (bindingResult.hasErrors()) {
 
             //redirectAttributes will save the information in the DTO and errors for short time
@@ -71,30 +69,25 @@ public class TutorialsController {
 
         tutorialsService.addTutoringOffer(tutorialAddDTO, userName);
 
-        return "redirect:/";    //TODO  try "forward:/index.html";
+        return "redirect:/";
     }
 
 
     // ChatBotAPI_1 -> In commons
     // ChatBotAPI_2
     @PostMapping("/ask-question")
-    public ResponseEntity<Map<String, Object>> askQuestion(@RequestBody Map<String, String> payload) { //
-        Map<String, Object> response = new HashMap<>();
-        String query = payload.get("query");
+    public ResponseEntity<Map<String, Object>> ascQuestion(@RequestBody Map<String, String> payload) {
 
-        String answer = openAIService.askQuestion(query);
+        Map<String, Object> response = new HashMap<>();
+        String question = payload.get("query");
+        String answer = openAIService.askQuestion(question);
         response.put("answer", answer);
 
         return ResponseEntity.ok(response);
+
     }
 
-    // ChatBotAPI_3
-    @GetMapping("/ask-question")
-    public String askQuestion() {
-        return "forward:/index.html";
-    }
-
-
+    //ResponseEntity is used in Spring Boot to return structured and flexible responses from REST APIs
     @GetMapping("/remove/{id}")
     // <a class="ml-3 text-danger" th:href="@{/tutoriels/remove/{id}(id = *{id})}">Remove</a>
     public String remove(@PathVariable Long id) throws TutorialNotFoundException {

@@ -6,7 +6,7 @@ function TutorialsList({ category }) {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Determine the API endpoint based on the category
+
         let endpoint;
         let title;
         let subtitle;

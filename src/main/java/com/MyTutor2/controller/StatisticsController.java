@@ -20,7 +20,7 @@ public class StatisticsController {
         this.userRepository = userRepository;
     }
 
-    @PreAuthorize("hasRole('ADMIN')") // SpringSecurity_12 Only users with the ADMIN role can access this method
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/statistics")
     public String statistics(Model model) {
 
@@ -28,6 +28,7 @@ public class StatisticsController {
 
         model.addAttribute("countAllUsers", countAllUsers.size()-1);
 
+        //        TODO convert according to React
         return "statistics";
     }
 

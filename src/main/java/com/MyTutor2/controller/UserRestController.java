@@ -5,7 +5,6 @@ import com.MyTutor2.model.entity.User;
 import com.MyTutor2.repo.UserRepository;
 import com.MyTutor2.service.ExRateService;
 import com.MyTutor2.service.TutorialsService;
-import com.MyTutor2.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,14 +24,13 @@ import java.util.Map;
 @RequestMapping("/api/users")
 public class UserRestController {
 
-    private UserService userService;
+
     private UserRepository userRepository;
     private TutorialsService tutorialsService;
     private ExRateService exRateService;
 
-    public UserRestController(UserService userService, UserRepository userRepository,
+    public UserRestController(UserRepository userRepository,
                               TutorialsService tutorialsService, ExRateService exRateService) {
-        this.userService = userService;
         this.userRepository = userRepository;
         this.tutorialsService = tutorialsService;
         this.exRateService = exRateService;

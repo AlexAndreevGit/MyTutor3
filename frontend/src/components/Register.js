@@ -9,7 +9,7 @@ function Register() {
         confirmPassword: ''
     });
     const [errors, setErrors] = useState({});
-    const navigate = useNavigate();
+
 
     const handleChange = (e) => {
         const { name, value } = e.target;
@@ -20,19 +20,15 @@ function Register() {
     };
 
 
-    //If we don't have a CSRF token in the request, spring boot will ignore the registration request
     useEffect(() => {
         fetch('/api/csrf')
             .then(response => response.json())
             .then(data => {
-                // Create a hidden input for CSRF
+
                 const form = document.querySelector('form[action="/users/register"]');
                 if (form && data.token) {
-                    // Remove any existing CSRF input
-                    const existingCsrf = form.querySelector(`input[name="${data.parameterName}"]`);
-                    if (existingCsrf) existingCsrf.remove();
 
-                    // Add new CSRF input
+
                     const csrfInput = document.createElement('input');
                     csrfInput.type = 'hidden';
                     csrfInput.name = data.parameterName;

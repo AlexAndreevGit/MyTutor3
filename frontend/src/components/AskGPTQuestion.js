@@ -75,11 +75,11 @@ function AskGPTQuestion() {
                         <input
                             type="text"
                             className="form-control"
-                            name="query"                                         //VB explain
+                            name="query"
                             placeholder="Enter Your Question"
                             style={{marginRight: '5px', width: '100%'}}
-                            value={question}                                    //VB explain
-                            onChange={(e) => setQuestion(e.target.value)}       //VB explain
+                            value={question}
+                            onChange={(e) => setQuestion(e.target.value)}
                         />
                         <button type="submit" className="btn-submit">Ask</button>
 

@@ -55,6 +55,7 @@ public class UserServiceImpl implements UserService {
     public void registerUser(UserRegisterDTO userRegisterDTO) {
 
         User user = modelMapper.map(userRegisterDTO, User.class);
+
         user.setPassword(passwordEncoder.encode(userRegisterDTO.getPassword()));
 
         UserRoleEntity userRoleEntity = userRoleRepository.findById(1L).get();
@@ -64,10 +65,10 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
 
-        LOGGER.info("A new user with the name {} was created.",user.getName());
-
+        LOGGER.info("A new user with the name {} was created.", user.getName());
 
     }
+
 
     @Transactional //is used to specify the scope of a single database transaction
     @Override

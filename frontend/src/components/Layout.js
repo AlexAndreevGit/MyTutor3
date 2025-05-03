@@ -5,13 +5,11 @@ import Header from "./Header";
 
 
 function Layout({children, isAuthenticated, isAdmin}) {
-    // const navigate = useNavigate();
 
-    // Create logout form with CSRF token
+
     const handleLogout = (e) => {
         e.preventDefault();
 
-        // Create a direct form submission to Spring Security's logout endpoint
         const form = document.createElement('form');
         form.method = 'POST';
         form.action = '/users/logout';
@@ -27,7 +25,6 @@ function Layout({children, isAuthenticated, isAdmin}) {
                     csrfInput.value = data.token;
                     form.appendChild(csrfInput);
 
-                    // Submit the form
                     document.body.appendChild(form);
                     form.submit();
                 }
@@ -42,7 +39,6 @@ function Layout({children, isAuthenticated, isAdmin}) {
 
             <Header isAuthenticated={isAuthenticated} isAdmin={isAdmin} handleLogout={handleLogout}/>
 
-            {/*The component that is currently loaded.*/}
             <main className="main-content">
                 {children}
             </main>

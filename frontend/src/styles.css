@@ -79,7 +79,7 @@
     transition: var(--transition);
 }
 
-.btn-action.primary {   /*  VB   btn-action primary in the HTML */
+.btn-action.primary {
     background: linear-gradient(90deg, var(--primary), var(--accent));
     color: white;
     box-shadow: var(--shadow-sm);
@@ -581,6 +581,12 @@ body {
     box-shadow: var(--shadow-md);
 }
 
+.div-main-transparent {
+    padding: 2rem 2rem;
+    margin-bottom: 3rem;
+
+}
+
 .purple-background{
     background: linear-gradient(90deg, var(--primary), var(--accent));
     text-align: center;
@@ -958,7 +964,7 @@ body {
     margin-bottom: 1.5rem;
 }
 
-.form-icon i { /*  aan investigate*/
+.form-icon i {
     font-size: 3rem;
     background: linear-gradient(90deg, var(--primary), var(--accent));
     -webkit-background-clip: text;
@@ -1008,6 +1014,7 @@ body {
 .form-group-ask-question{
     margin-bottom: 1.5rem;
     display: flex;
+    width: 100%
 }
 
 .form-label {
@@ -1031,6 +1038,7 @@ body {
     transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
 }
 
+/*So the border of the input fields is glowing*/
 .form-control:focus {
     border-color: var(--primary);
     outline: 0;
@@ -1435,7 +1443,6 @@ body {
     font-size: 1.5rem;
     font-weight: 600;
     color: var(--text-primary);
-    margin: 0;
     display: flex; /* It turns the element into a flex container. */
     align-items: center;
 }
@@ -1555,15 +1562,15 @@ body {
     transition: width 1s ease-in-out;
 }
 
-.chart-segment.informatics {
+.informatics {
     background-color: var(--primary);
 }
 
-.chart-segment.mathematics {
+.mathematics {
     background-color: #3b82f6;
 }
 
-.chart-segment.datascience {
+.datascience {
     background-color: #10b981;
 }
 

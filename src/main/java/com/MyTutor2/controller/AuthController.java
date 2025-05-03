@@ -17,10 +17,25 @@ public class AuthController {
 
     @GetMapping("/auth/status")
     public Map<String, Object> getAuthStatus() {
+
+
+        //authentication object contains the details of the current user
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        boolean isAuthenticated = auth != null && auth.isAuthenticated() &&
-                !auth.getAuthorities().stream()
+
+
+        boolean isAuthenticated = false;
+
+        if (auth != null) {
+            if (auth.isAuthenticated()) {
+
+                boolean hasAnonymousRole = auth.getAuthorities().stream()
                         .anyMatch(a -> a.getAuthority().equals("ROLE_ANONYMOUS"));
+
+                if (!hasAnonymousRole) {
+                    isAuthenticated = true;
+                }
+            }
+        }
 
         Map<String, Object> status = new HashMap<>();
         status.put("authenticated", isAuthenticated);

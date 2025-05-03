@@ -21,7 +21,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity httpSecurity) throws Exception {
         return httpSecurity.authorizeHttpRequests(
-                    authorizeRequests ->
+                    authorizeRequests ->   //which pages are public(no logIn needed) and which are not
                             authorizeRequests
                                     .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
                                     .requestMatchers("/static/**").permitAll() //.permitAll() means that I will always receive information. Not matter if I'm authenticated or send a csrf token
@@ -32,16 +32,16 @@ public class SecurityConfig {
                                     .requestMatchers("/admin/**").hasRole("ADMIN")
                                     .anyRequest().authenticated()
                 )
-                .formLogin(formLogin ->
+                .formLogin(formLogin ->  //how login works
                         formLogin
-                                .loginPage("/users/login")
-                                .usernameParameter("username")
-                                .passwordParameter("password")
+                                .loginPage("/users/login")        //use a custom login page
+                                .usernameParameter("username")    //the name of the input field in your login form for username.
+                                .passwordParameter("password")    //the name of the password input field
                                 .defaultSuccessUrl("/home",true)
                                 .failureUrl("/users/login-error")
                 )
                 .logout(
-                        logout ->
+                        logout ->       //how logout works
                                 logout.logoutUrl("/users/logout")
                                         .logoutSuccessUrl("/")
                                         .invalidateHttpSession(true)
