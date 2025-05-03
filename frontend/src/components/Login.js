@@ -8,7 +8,7 @@ function Login() {
     const [password, setPassword] = useState('12345');
 
     const location = useLocation();  //      the method useLocations() holds the current URL
-    const isLoginError = location.pathname === '/users/login-error';   //   if the user is on the current path then "isLoginError" is true otherwise false
+    const isLoginError = location.pathname === '/users/login-error';
 
 
     useEffect(() => {

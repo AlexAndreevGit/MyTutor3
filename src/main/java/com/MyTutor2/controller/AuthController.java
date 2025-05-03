@@ -20,15 +20,15 @@ public class AuthController {
 
 
         //authentication object contains the details of the current user
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 
         boolean isAuthenticated = false;
 
-        if (auth != null) {
-            if (auth.isAuthenticated()) {
+        if (authentication != null) {
+            if (authentication.isAuthenticated()) {
 
-                boolean hasAnonymousRole = auth.getAuthorities().stream()
+                boolean hasAnonymousRole = authentication.getAuthorities().stream()
                         .anyMatch(a -> a.getAuthority().equals("ROLE_ANONYMOUS"));
 
                 if (!hasAnonymousRole) {
@@ -41,8 +41,8 @@ public class AuthController {
         status.put("authenticated", isAuthenticated);
 
         if (isAuthenticated) {
-            status.put("username", auth.getName());
-            status.put("roles", auth.getAuthorities().stream()
+            status.put("username", authentication.getName());
+            status.put("roles", authentication.getAuthorities().stream()
                     .map(GrantedAuthority::getAuthority)
                     .collect(Collectors.toList()));
         }
