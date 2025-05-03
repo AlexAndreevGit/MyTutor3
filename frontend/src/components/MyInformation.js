@@ -10,7 +10,7 @@ function MyInformation() {
     averagePriceBGN: '0.00',
     submittedByMeTutorialsAsView: []
   });
-  const [loading, setLoading] = useState(true);
+
   const [csrfToken, setCsrfToken] = useState('');
 
   useEffect(() => {
@@ -24,11 +24,11 @@ function MyInformation() {
         })
         .then(data => {
           setUserInfo(data);
-          setLoading(false);
+
         })
         .catch(error => {
           console.error('Error fetching user information:', error);
-          setLoading(false);
+
         });
 
     // Fetch CSRF token
@@ -64,18 +64,6 @@ function MyInformation() {
     }
   };
 
-  if (loading) {
-    return (
-        <main className="container py-4">
-          <div className="text-center p-5">
-            <div className="spinner-border text-primary" role="status">
-              <span className="visually-hidden">Loading...</span>
-            </div>
-          </div>
-        </main>
-    );
-  }
-
   return (
       <main className="container py-4">
         <div className="profile-container">
@@ -108,15 +96,15 @@ function MyInformation() {
               </div>
             </div>
 
-            <div className="stat-card">
-              <div className="stat-icon">
-                <i className="fas fa-money-bill-wave"></i>
-              </div>
-              <div className="stat-content">
-                <h3 className="stat-value">{userInfo.averagePriceBGN} Leva</h3>
-                <p className="stat-label">Avg. Price (BGN)</p>
-              </div>
-            </div>
+            {/*<div className="stat-card">*/}
+            {/*  <div className="stat-icon">*/}
+            {/*    <i className="fas fa-money-bill-wave"></i>*/}
+            {/*  </div>*/}
+            {/*  <div className="stat-content">*/}
+            {/*    <h3 className="stat-value">{userInfo.averagePriceBGN} Leva</h3>*/}
+            {/*    <p className="stat-label">Avg. Price (BGN)</p>*/}
+            {/*  </div>*/}
+            {/*</div>*/}
           </div>
 
           <div className="offers-list-container">
@@ -154,7 +142,7 @@ function MyInformation() {
                               onClick={(e) => {
                                 e.preventDefault();
                                 if (window.confirm('Are you sure you want to remove this offer?')) {
-                                  window.location.href = `/tutorials/remove/${tutorial.id}`;
+                                  window.location.href = `/tutorials/remove/${tutorial.id}`;   //this will hit the spring controler that will delate the tutorial
                                 }
                               }}
                           >
