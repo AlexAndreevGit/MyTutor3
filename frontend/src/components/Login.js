@@ -8,6 +8,7 @@ function Login() {
     const [password, setPassword] = useState('12345');
 
     const location = useLocation();  //      the method useLocations() holds the current URL
+    const test = 1
     const isLoginError = location.pathname === '/users/login-error';
 
 
