@@ -11,11 +11,11 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
-public class CsrfController {
+public class CSRFTokenController {
 
 
     @GetMapping("/csrf")
-    public Map<String, String> getCsrfToken(HttpServletRequest request) {
+    public Map<String, String> getCSRFToken(HttpServletRequest request) {
 
         CsrfToken csrf = (CsrfToken) request.getAttribute(CsrfToken.class.getName());
         Map<String, String> token = new HashMap<>();
