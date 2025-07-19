@@ -4,7 +4,6 @@ function About() {
     return (
         <main className="container py-4">
 
-            {/*Test comment2*/}
             <div className="div-main">
                     <div className="col-lg-12">
                             <h1 className="about-title">About Us</h1>
