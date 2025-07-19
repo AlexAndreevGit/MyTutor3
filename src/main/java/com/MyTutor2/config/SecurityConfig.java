@@ -24,9 +24,7 @@ public class SecurityConfig {
                     authorizeRequests ->   //which pages are public(no logIn needed) and which are not
                             authorizeRequests
                                     .requestMatchers(PathRequest.toStaticResources().atCommonLocations()).permitAll()
-                                    .requestMatchers("/static/**").permitAll() //.permitAll() means that I will always receive information. Not matter if I'm authenticated or send a csrf token
-                                    .requestMatchers("/*.js", "/*.css", "/*.ico", "/*.json").permitAll()
-                                    .requestMatchers("/index.html").permitAll()
+                                    .requestMatchers("/*.js", "/*.css", "/*.ico", "/*.json", "/static/**").permitAll() //.permitAll() means that I will always receive information. Not matter if I'm authenticated or send a csrf token
                                     .requestMatchers("/", "/home", "/about-us", "/users/login", "/users/login-error","/users/register", "/api/home-stats", "/api/auth/status", "/api/convert", "/api/**", "/index.html").permitAll()
                                     .requestMatchers("/api/tutorials/**").authenticated()
                                     .requestMatchers("/admin/**").hasRole("ADMIN")
