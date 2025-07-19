@@ -28,16 +28,15 @@ public class TutorialsServiceImpl implements TutorialsService {
     private ModelMapper modelMapper;
     private UserRepository userRepository;
     private CategoryRepository categoryRepository;
-    private final RestClient restClient;
 
     private final Logger LOGGER = LoggerFactory.getLogger(ExRateServiceImpl.class);  //initialise a logger to log messages
 
-    public TutorialsServiceImpl(TutoringRepository tutoringRepository, ModelMapper modelMapper, UserRepository userRepository, CategoryRepository categoryRepository, RestClient.Builder restClientBuilder) {
+    public TutorialsServiceImpl(TutoringRepository tutoringRepository, ModelMapper modelMapper, UserRepository userRepository, CategoryRepository categoryRepository) {
         this.tutoringRepository = tutoringRepository;
         this.modelMapper = modelMapper;
         this.userRepository = userRepository;
         this.categoryRepository = categoryRepository;
-        this.restClient = restClientBuilder.build();
+
     }
 
     @Override
