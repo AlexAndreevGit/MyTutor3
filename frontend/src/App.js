@@ -9,8 +9,8 @@ import InformaticsTutorials from './components/InformaticsTutorials';
 import MathTutorials from './components/MathTutorials';
 import OtherTutorials from './components/OtherTutorials';
 import TutorialAdd from './components/TutorialAdd';
-import MyInformation from './components/MyInformation';
 import AskGPTQuestion from "./components/AskGPTQuestion";
+import MyInformation from "./components/MyInformation";
 
 
 function AppContent() {
