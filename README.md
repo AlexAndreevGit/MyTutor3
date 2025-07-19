@@ -1,12 +1,12 @@
 
-# MyTutor2
+# MyTutor3
 ![Image](https://github.com/user-attachments/assets/b581cf6c-34e2-4da4-ada4-e763a72a7b5b)
 
 ## Link
 https://polar-wildwood-12370-645ec7ef1a83.herokuapp.com/home
 
 ## About
-MyTutor2 is a web platform that connects tutors and students in the fields of Mathematics, Informatics, and Data Science. Our mission is to create an marketplace where knowledge experts can offer their services and students can find the educational support they need.
+MyTutor3 is a web platform that connects tutors and students in the fields of Mathematics, Informatics, and Data Science. Our mission is to create an marketplace where knowledge experts can offer their services and students can find the educational support they need.
 
 ## Key Features
 - **User Registration & Authentication** - Secure account creation and login system
@@ -20,12 +20,11 @@ MyTutor2 is built using modern technologies:
 
 - **Backend**
     - Java
-    - Spring Framework
+    - Spring Boot
     - SQL database
 
 - **Frontend**
-    - HTML, CSS & JavaScript
-    - Thymeleaf template engine
+    - React, JavaScript, HTML, CSS 
     - Responsive design principles
 
 ## Entity Relationship Diagram (ERD)
