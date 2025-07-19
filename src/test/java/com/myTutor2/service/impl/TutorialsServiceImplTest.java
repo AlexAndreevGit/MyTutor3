@@ -44,7 +44,7 @@ public class TutorialsServiceImplTest {
     @Mock
     private ModelMapper modelMapper;
 
-    @InjectMocks
+    @InjectMocks // The dependencies of TutorialsServiceImpl have been mocked and now they are injected
     private TutorialsServiceImpl tutoringService;
 
     private TutorialAddDTO tutorialAddDTO;
@@ -57,16 +57,12 @@ public class TutorialsServiceImplTest {
     void setUp() {
         tutorialAddDTO = new TutorialAddDTO();
         tutorialAddDTO.setCategory(CategoryNameEnum.MATHEMATICS);
-        //tutorialAddDTO.setName("Algebra Basics");
-        //tutorialAddDTO.setDescription("Learn the basics of Algebra.");
-        //tutorialAddDTO.setPrice(30.0);
 
         user = new User();
         user.setUsername("testUser");
         user.setEmail("testUser@example.com");
 
         category = new Category();
-        //category.setName(CategoryNameEnum.MATHEMATICS);
 
         tutoringOffer = new TutoringOffer();
         tutoringOffer.setAddedBy(user);
