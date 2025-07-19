@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -36,6 +37,7 @@ public class UserRestController {
         this.exRateService = exRateService;
     }
 
+    //TODO remove one of both      my-informatio and my-informatio2
     @GetMapping("/my-information")
     public ResponseEntity<Map<String, Object>> myInformation(@AuthenticationPrincipal UserDetails userDetails) {
         if (userDetails == null) {
@@ -73,4 +75,38 @@ public class UserRestController {
 
         return ResponseEntity.ok(result);
     }
+
+
+    @GetMapping("/my-information2")
+    public Map<String, Object> getMyInformation(Principal principal) { // Principal is a Java interface representing the current authenticated user
+
+        String userName = principal.getName();
+
+        User user = userRepository.findByUsername(userName).orElse(null);
+
+        String userEmail = user.getEmail();
+        List<TutorialViewDTO> offers = tutorialsService.findAllTutoringOffersByUserId(user.getId());
+        int numberOfUserOffers = offers.size();
+
+
+        Double totapPrice = 0.0;
+        for (TutorialViewDTO tutorialViewDTO : offers) {
+            Double currentOfferPrice = tutorialViewDTO.getPrice();
+            totapPrice += currentOfferPrice;
+        }
+        Double averagePrice = totapPrice / numberOfUserOffers;
+        DecimalFormat df= new DecimalFormat("#.00");
+
+        Map<String, Object> result = new HashMap<>();
+
+        result.put("userName", userName);
+        result.put("userEmail", userEmail);
+        result.put("numberOfClasses", numberOfUserOffers);
+        result.put("submittedTutoringOffersAsAView", offers);
+        result.put("averagePriceEUR", df.format(averagePrice));
+
+        return result;
+    }
+
+
 }
