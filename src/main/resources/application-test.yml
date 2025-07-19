@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:h2:mem:testdb
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    database-platform: org.hibernate.dialect.H2Dialect
+    properties:
+      hibernate:
+        format_sql: true
+
+# We don't need to set forex.api.key here since we're using System.setProperty
+# to set the FOREX_API_KEY environment variable directly
+forex:
+  api:
+    url: "https://openexchangerates.org/api/latest.json?app_id={app_id}"
+    base: "USD"
