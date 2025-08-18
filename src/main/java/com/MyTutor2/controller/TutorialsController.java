@@ -5,9 +5,9 @@ import com.MyTutor2.exceptions.CategoryNotFoundException;
 import com.MyTutor2.exceptions.TutorialNotFoundException;
 import com.MyTutor2.exceptions.UserNotFoundException;
 import com.MyTutor2.model.DTOs.TutorialAddDTO;
+//import com.MyTutor2.service.OpenAIService;
 import com.MyTutor2.service.OpenAIService;
 import com.MyTutor2.service.TutorialsService;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import jakarta.validation.Valid;
@@ -26,10 +26,12 @@ import java.util.Map;
 public class TutorialsController {
 
     private TutorialsService tutorialsService;
+//    private OpenAIService openAIService;
     private OpenAIService openAIService;
 
     public TutorialsController(TutorialsService tutorialsService, OpenAIService openAIService) {
         this.tutorialsService = tutorialsService;
+
         this.openAIService = openAIService;
     }
 
@@ -75,21 +77,45 @@ public class TutorialsController {
 
     // ChatBotAPI_1 -> In commons
     // ChatBotAPI_2
-    @PostMapping("/ask-question")
-    public ResponseEntity<Map<String, Object>> ascQuestion(@RequestBody Map<String, String> payload) {
-
-        Map<String, Object> response = new HashMap<>();
-        String question = payload.get("query");
-        String answer = openAIService.askQuestion(question);
-        response.put("answer", answer);
-
-        return ResponseEntity.ok(response);
-
-    }
 
     //ResponseEntity is used in Spring Boot to return structured and flexible responses from REST APIs
+//    @PostMapping("/ask-question")
+//    public ResponseEntity<Map<String, Object>> ascQuestion(@RequestBody Map<String, String> payload) {
+//
+//        Map<String, Object> response = new HashMap<>();
+//        String question = payload.get("query");
+//        String answer = openAIService.askQuestion(question);
+//        response.put("answer", answer);
+//
+//        return ResponseEntity.ok(response);
+//
+//    }
+
+
+    //ResponseEntity is used in Speing Boot to return flexible and structured responses for REST APIs
+    //The @RequestBody annotation in Spring Boot is used to bind/map the HTTP request body(sent to /tutor/ask-question) to a method parameter. In this case Map<String,String>.
+    @PostMapping("ask-question")
+    public ResponseEntity<Map<String,Object>> askQuestion(@RequestBody Map<String,String> payload){
+
+        Map<String,Object> response = new HashMap<>();
+        String question = payload.get("query");
+        String answer = openAIService.askQuestion(question);
+        response.put("answer",answer);
+
+        return ResponseEntity.ok(response);
+    }
+
+
+//    @GetMapping("/remove/{id}")
+//    public String remove(@PathVariable Long id) throws TutorialNotFoundException {
+//
+//        tutorialsService.removeOfferById(id);
+//
+//        return "redirect:/home";
+//    }
+
+    //@PathVariable is needed to extract the id from the URL
     @GetMapping("/remove/{id}")
-    // <a class="ml-3 text-danger" th:href="@{/tutoriels/remove/{id}(id = *{id})}">Remove</a>
     public String remove(@PathVariable Long id) throws TutorialNotFoundException {
 
         tutorialsService.removeOfferById(id);

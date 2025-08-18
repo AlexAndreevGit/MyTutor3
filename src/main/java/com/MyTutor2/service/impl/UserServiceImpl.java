@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -65,7 +66,7 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(user);
 
-        LOGGER.info("A new user with the name {} was created.", user.getName());
+        LOGGER.info("A new user with the name {} was created.", user.getUsername());
 
     }
 
@@ -94,5 +95,33 @@ public class UserServiceImpl implements UserService {
 
 
     }
+
+    @Override
+    public void deleteUserById(Long id) {
+
+        User user = userRepository.findById(id).orElse(null);
+
+        if(user!=null){
+
+            List<TutorialViewDTO> submitetedbyMeTutorisls =  tutorialsService.findAllTutoringOffersByUserId(id);
+
+            for(TutorialViewDTO tutorialViewDTO: submitetedbyMeTutorisls){
+
+                tutoringRepository.deleteById(tutorialViewDTO.getId());
+
+            }
+
+            user.getRoles().clear();
+
+            userRepository.deleteById(user.getId());
+
+            LOGGER.info("User with id {} deleted.",id);
+
+        }else {
+            LOGGER.warn("User with id {} not found.",id);
+        }
+
+    }
+
 
 }

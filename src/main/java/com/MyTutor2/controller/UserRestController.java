@@ -38,43 +38,43 @@ public class UserRestController {
     }
 
     //TODO remove one of both      my-informatio and my-informatio2
-    @GetMapping("/my-information")
-    public ResponseEntity<Map<String, Object>> myInformation(@AuthenticationPrincipal UserDetails userDetails) {
-        if (userDetails == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        User loggedInUser = userRepository.findByUsername(userDetails.getUsername())
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        List<TutorialViewDTO> submittedByMeTutorialsAsView =
-                tutorialsService.findAllTutoringOffersByUserId(loggedInUser.getId());
-
-        double averagePriceEU = submittedByMeTutorialsAsView.stream()
-                .mapToDouble(TutorialViewDTO::getPrice)
-                .average()
-                .orElse(0.0);
-
-        BigDecimal averagePriceBGN = BigDecimal.ZERO;
-
-        try {
-            averagePriceBGN = exRateService.convert("EUR", "BGN", BigDecimal.valueOf(averagePriceEU));
-        } catch (Exception e) {
-            System.out.println("It is not possible to calculate the average price.");
-        }
-
-        DecimalFormat df = new DecimalFormat("#.00");
-
-        Map<String, Object> result = new HashMap<>();
-        result.put("userName", loggedInUser.getName());
-        result.put("userEmail", loggedInUser.getEmail());
-        result.put("numberOfClasses", submittedByMeTutorialsAsView.size());
-        result.put("submittedByMeTutorialsAsView", submittedByMeTutorialsAsView);
-        result.put("averagePriceEUR", df.format(averagePriceEU));
-        result.put("averagePriceBGN", df.format(averagePriceBGN));
-
-        return ResponseEntity.ok(result);
-    }
+//    @GetMapping("/my-information")
+//    public ResponseEntity<Map<String, Object>> myInformation(@AuthenticationPrincipal UserDetails userDetails) {
+//        if (userDetails == null) {
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+//        }
+//
+//        User loggedInUser = userRepository.findByUsername(userDetails.getUsername())
+//                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+//
+//        List<TutorialViewDTO> submittedByMeTutorialsAsView =
+//                tutorialsService.findAllTutoringOffersByUserId(loggedInUser.getId());
+//
+//        double averagePriceEU = submittedByMeTutorialsAsView.stream()
+//                .mapToDouble(TutorialViewDTO::getPrice)
+//                .average()
+//                .orElse(0.0);
+//
+//        BigDecimal averagePriceBGN = BigDecimal.ZERO;
+//
+//        try {
+//            averagePriceBGN = exRateService.convert("EUR", "BGN", BigDecimal.valueOf(averagePriceEU));
+//        } catch (Exception e) {
+//            System.out.println("It is not possible to calculate the average price.");
+//        }
+//
+//        DecimalFormat df = new DecimalFormat("#.00");
+//
+//        Map<String, Object> result = new HashMap<>();
+//        result.put("userName", loggedInUser.getName());
+//        result.put("userEmail", loggedInUser.getEmail());
+//        result.put("numberOfClasses", submittedByMeTutorialsAsView.size());
+//        result.put("submittedByMeTutorialsAsView", submittedByMeTutorialsAsView);
+//        result.put("averagePriceEUR", df.format(averagePriceEU));
+//        result.put("averagePriceBGN", df.format(averagePriceBGN));
+//
+//        return ResponseEntity.ok(result);
+//    }
 
 
     @GetMapping("/my-information2")
@@ -94,16 +94,34 @@ public class UserRestController {
             Double currentOfferPrice = tutorialViewDTO.getPrice();
             totapPrice += currentOfferPrice;
         }
-        Double averagePrice = totapPrice / numberOfUserOffers;
+
+        Double averagePriceEU = 0.0;
+
+        if(numberOfUserOffers > 0){
+            averagePriceEU = totapPrice / numberOfUserOffers;
+        }
+
+
         DecimalFormat df= new DecimalFormat("#.00");
+
+        BigDecimal averagePriceBGN = BigDecimal.ZERO;
+        BigDecimal averagePriceEUBigDecimal = BigDecimal.valueOf(averagePriceEU);
+
+        try {
+            averagePriceBGN = exRateService.convert("EUR","BGN",averagePriceEUBigDecimal);
+        }catch (Exception e){
+            System.out.println();
+        }
 
         Map<String, Object> result = new HashMap<>();
 
         result.put("userName", userName);
         result.put("userEmail", userEmail);
+        result.put("designation",user.getDesignation());
         result.put("numberOfClasses", numberOfUserOffers);
         result.put("submittedTutoringOffersAsAView", offers);
-        result.put("averagePriceEUR", df.format(averagePrice));
+        result.put("averagePriceEUR", df.format(averagePriceEU));
+        result.put("averagePriceBGN", df.format(averagePriceBGN));
 
         return result;
     }

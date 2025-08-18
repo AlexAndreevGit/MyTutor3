@@ -2,16 +2,23 @@ package com.MyTutor2.model.entity;
 
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Table(name = "Tutors")
+@Setter
+@Getter
+@Entity // means that this class is an entity and is mapped to a database table
+@Table(name = "Tutors")  //means that this class is mapped to a table named "Tutors" in the database
 public class User extends BaseEntity {
 
     @Column(unique = true, nullable = false)
     private String username;
+
+    @Column(nullable = false)
+    private String designation;
 
     @Column(nullable = false)
     private String password;
@@ -41,44 +48,11 @@ public class User extends BaseEntity {
         this.email = email;
     }
 
-
-    public String getName() {
-        return username;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
+    public User(String username, String designation, String password, String email) {
         this.username = username;
-    }
-
-    public void setName(String name) {
-        this.username = name;
-    }
-
-    public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
+        this.designation = designation;
         this.password = password;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
         this.email = email;
     }
 
-    public List<UserRoleEntity> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(List<UserRoleEntity> roles) {
-        this.roles = roles;
-    }
 }

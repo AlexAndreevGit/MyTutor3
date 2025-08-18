@@ -17,6 +17,9 @@ public class UserRegisterDTO {
     private String email;
 
     @NotNull
+    private String designation;
+
+    @NotNull
     @Size(min=2, max=40)
     private String password;
 
@@ -55,4 +58,13 @@ public class UserRegisterDTO {
     public void setConfirmPassword(String confirmPassword) {
         this.confirmPassword = confirmPassword;
     }
+
+    public String getDesignation() {
+        return designation;
+    }
+
+    public void setDesignation(String designation) {
+        this.designation = designation;
+    }
+
 }

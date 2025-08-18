@@ -7,6 +7,8 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Positive;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "tutoringOffer")
 public class TutoringOffer extends BaseEntity{
@@ -26,6 +28,18 @@ public class TutoringOffer extends BaseEntity{
 
     @ManyToOne
     private User addedBy;
+
+    @Column
+    private LocalDate createdOn;
+
+    public TutoringOffer(String name, String description, Double price, Category category, User addedBy, LocalDate createdOn) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.category = category;
+        this.addedBy = addedBy;
+        this.createdOn = createdOn;
+    }
 
     public TutoringOffer(String name, String description, Double price, Category category, User addedBy) {
         this.name = name;
@@ -77,5 +91,13 @@ public class TutoringOffer extends BaseEntity{
 
     public void setAddedBy(User addedBy) {
         this.addedBy = addedBy;
+    }
+
+    public LocalDate getCreatedOn() {
+        return createdOn;
+    }
+
+    public void setCreatedOn(LocalDate createdOn) {
+        this.createdOn = createdOn;
     }
 }

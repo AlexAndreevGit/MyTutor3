@@ -1,6 +1,7 @@
 package com.MyTutor2.service.impl;
 
 import com.MyTutor2.config.OpenAIAPIConfig;
+//import com.MyTutor2.service.OpenAIService;
 import com.MyTutor2.service.OpenAIService;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
@@ -10,20 +11,19 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-// ChatBotAPI_5
 @Service
 public class OpenAIServiceImpl implements OpenAIService {
 
     private OpenAIAPIConfig openAIAPIConfig;
 
-    private final RestClient.Builder restClientBuilder;
-    private RestClient restClient;                       //Do we need my implemetation when we use the erst client of spring?
+    private RestClient.Builder restClientBuilder;
+    private RestClient restClient;
+
 
     public OpenAIServiceImpl(RestClient.Builder restClientBuilder, OpenAIAPIConfig openAIAPIConfig) {
         this.restClientBuilder = restClientBuilder;
         this.openAIAPIConfig = openAIAPIConfig;
     }
-
 
     public String askQuestion(String question) {
         String extendedQuestion = "You are a helpful chatbot that assists people with their questions about programming, mathematics and data science. " +
@@ -31,47 +31,43 @@ public class OpenAIServiceImpl implements OpenAIService {
                 "the question is probably a junior developer or a student, so make sure to keep the answer simple and explain any complex concepts" +
                 "The question is" + question;
 
+        Map<String,Object> messageContent = new HashMap<>();
+        messageContent.put("role","user");
+        messageContent.put("content",extendedQuestion);
 
-        Map<String, Object> messageContent = new HashMap<>();
-        messageContent.put("role", "user");
-        messageContent.put("content", extendedQuestion);
-
-        Map<String, Object> requestBody = new HashMap<>();
-        requestBody.put("model", openAIAPIConfig.getModel());
-        requestBody.put("messages", List.of(messageContent));  //give him the whole chat history. In our case List of one message.
+        Map<String,Object> requestBody = new HashMap<>();
+        requestBody.put("model",openAIAPIConfig.getModel());
+        requestBody.put("messages", List.of(messageContent));
 
         try {
+            //we build ths restclient with this URL. Each request will go to the same url
             this.restClient = restClientBuilder
-                    .baseUrl(openAIAPIConfig.getApiUrl()) // we build this restClient with this URL. Each request will go exactly to this URL
+                    .baseUrl(openAIAPIConfig.getApiUrl())
                     .build();
 
             var response = restClient
                     .post() //create a post request to the URL
-                    .contentType(MediaType.APPLICATION_JSON) // that what I send you is a JSON
-                    // Authorization mean this user can use this endpoint
+                    .contentType(MediaType.APPLICATION_JSON)//that what I send you is a JSON
                     .header("Authorization", "Bearer " + openAIAPIConfig.getApiKey())
-                    .body(requestBody) //the body is the data that I'm sending and teh header is meta-data
+                    .body(requestBody)
                     .retrieve()
-                    .body(Map.class); //convert the body(of teh response) in to a map
+                    .body(Map.class); //convert the body in a map
 
-            if (response != null) {
-                List<Map<String, Object>> choices = (List<Map<String, Object>>) response.get("choices");
+            if(response != null){
+                List<Map<String,Object>> choices = (List<Map<String,Object>>) response.get("choices");
 
-                if (choices != null && !choices.isEmpty()) {
+                if(choices!=null && !choices.isEmpty()){
+                   Map<String,Object> message = (Map<String,Object>) choices.get(0).get("message");
 
-                    Map<String, Object> message = (Map<String, Object>) choices.get(0).get("message");
-
-                    if (message != null) {
-
+                    if(message != null){
                         String responseToTheQuestion = (String) message.get("content");
-
                         return responseToTheQuestion;
                     }
                 }
             }
 
             return "We are really sorry, There seems to be a problem with TutorBot! Please come back later";
-        } catch (Exception e) {
+        }catch (Exception e){
             e.printStackTrace();
             return "An error occurred while processing your request: " + e.getMessage();
         }

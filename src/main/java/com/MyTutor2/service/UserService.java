@@ -9,4 +9,6 @@ public interface UserService {
     void registerUser(UserRegisterDTO userRegisterDTO);
 
     void deleteUser(User logedInUser) throws TutorialNotFoundException;
+
+    void deleteUserById(Long id);
 }

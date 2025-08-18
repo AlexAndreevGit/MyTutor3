@@ -1,6 +1,7 @@
 import React from 'react';
 import {render, screen, fireEvent, waitFor} from '@testing-library/react';
-import TutorialAdd from './TutorialAdd';
+// import TutorialAdd from './TutorialAdd';
+import TutorialAdd from "./TutorialAdd";
 
 // Mock CSRF token function
 jest.mock('./Utils', () => ({

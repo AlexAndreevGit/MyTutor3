@@ -1,35 +1,62 @@
-import React from 'react';
+import React from "react";
+import {
+    desctiption,
+    ourMission,
+    informaticsDescription,
+    mathematicsDescription,
+    otherSubjectsDescription
+} from "./UtilsTexts";
 
-function About() {
-    return (
+
+//in React components are JS functions that return JSX
+function AboutUs(){
+
+    return(
         <main className="container py-4">
 
             <div className="div-main">
-                    <div className="col-lg-12">
-                            <h1 className="about-title">About Us</h1>
-                            <p className="about-description">
-                                MyTutor is a platform connecting students with peer tutors to facilitate
-                                learning and academic success. We bring together those who need help with
-                                specific subjects and those who have mastered those subjects and want to
-                                share their knowledge.
-                            </p>
+                <div className="col-lg-12">
+                    <h1 className="about-title">About Us</h1>
+                    <p className="about-description">
+                        {desctiption}
+                    </p>
                 </div>
             </div>
 
-            <div className="div-main purple-background" >
+            <div className="div-main purple-background">
                 <div className="mission-content">
                     <div className="mission-icon">
                         <i className="fas fa-graduation-cap"></i>
                     </div>
                     <p className="mission-text">
-                        Our mission is to make education more accessible by creating a community
-                        where students can find the help they need and tutors can share their expertise.
+                        {ourMission}
                     </p>
                 </div>
             </div>
 
-            <div className="subjects-section">
+            {/*Checkboxen zur Auswahl einfügen*/}
+            <div className="div-main">
+                <div className="checkbox-section">
+                    <h3>Select Options:</h3>
+                    <div>
+                        <label>
+                            <input type="checkbox" name="optionA" value="TestA"/> TestA
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="checkbox" name="optionB" value="TestB"/> TestB
+                        </label>
+                    </div>
+                    <div>
+                        <label>
+                            <input type="checkbox" name="optionC" value="TestC"/> TestC
+                        </label>
+                    </div>
+                </div>
+            </div>
 
+            <div className="subjects-section">
                 <div className="row">
                     <div className="col-md-4 mb-4">
                         <div className="subject-card">
@@ -38,12 +65,10 @@ function About() {
                             </div>
                             <h3 className="subject-title">Informatics</h3>
                             <p className="subject-description">
-                                Find tutors specializing in programming, computer science, algorithms,
-                                data structures, and more.
+                                {informaticsDescription}
                             </p>
                         </div>
                     </div>
-
                     <div className="col-md-4 mb-4">
                         <div className="subject-card">
                             <div className="subject-icon">
@@ -51,12 +76,10 @@ function About() {
                             </div>
                             <h3 className="subject-title">Mathematics</h3>
                             <p className="subject-description">
-                                Get help with algebra, calculus, statistics, discrete mathematics,
-                                and other math subjects.
+                                {mathematicsDescription}
                             </p>
                         </div>
                     </div>
-
                     <div className="col-md-4 mb-4">
                         <div className="subject-card">
                             <div className="subject-icon">
@@ -64,17 +87,19 @@ function About() {
                             </div>
                             <h3 className="subject-title">Other Subjects</h3>
                             <p className="subject-description">
-                                Find tutoring in physics, chemistry, biology, economics, and many
-                                other academic fields.
+                                {otherSubjectsDescription}
                             </p>
                         </div>
                     </div>
-
                 </div>
-
             </div>
+
+
         </main>
-    );
+
+
+    )
+
 }
 
-export default About;
+export default AboutUs;

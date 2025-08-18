@@ -9,6 +9,7 @@ import com.MyTutor2.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.springframework.security.core.context.SecurityContextHolder;
 
+import java.util.List;
 
 
 @Controller
@@ -33,26 +35,11 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-//    @ModelAttribute("userRegisterDTO")
-//    public UserRegisterDTO initUserRegisterDTO(){
-//        return new UserRegisterDTO();
-//    }
-
-//    @GetMapping("/register")
-//    public String register(HttpServletRequest request) {
-//        String acceptHeader = request.getHeader("Accept");
-//        boolean wantsHtml = acceptHeader != null && acceptHeader.contains("text/html");
-//
-//        return "forward:/index.html";
-//    }
-
-
 
     @PostMapping("/register")
     public String registerConfirm(@Valid UserRegisterDTO userRegisterDTO,
                                   BindingResult bindingResult,
                                   RedirectAttributes redirectAttributes) {
-
 
         if(bindingResult.hasErrors() || !userRegisterDTO.getPassword().equals(userRegisterDTO.getConfirmPassword())) {
             redirectAttributes.addFlashAttribute("userRegisterDTO",userRegisterDTO);
@@ -81,29 +68,74 @@ public class UserController {
         return "forward:/index.html";
     }
 
+//    @PostMapping("/delete-account")
+//    public String deleteAccount(@AuthenticationPrincipal UserDetails userDetails,
+//                                HttpServletRequest request,    //is used to get the current user's request
+//                                HttpServletResponse response) throws TutorialNotFoundException {  //is used to get the current user's response
+//
+//        User logedInUser= userRepository.findByUsername(userDetails.getUsername()).orElse(null);
+//
+//        userService.deleteUser(logedInUser);
+//
+//        //--- logout ---
+//
+//        //get the current user's authentication
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//
+//        //securityContextLogoutHandler is used to log out the current user
+//        SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();
+//
+//        if (authentication != null) {
+//            securityContextLogoutHandler.logout(request, response, authentication);
+//        }
+//
+//        return "redirect:/";
+//    }
+
     @PostMapping("/delete-account")
-    public String deleteAccount(@AuthenticationPrincipal UserDetails userDetails,
+    public String deleteUserAccount(@AuthenticationPrincipal UserDetails userDetails,
                                 HttpServletRequest request,    //is used to get the current user's request
-                                HttpServletResponse response) throws TutorialNotFoundException {  //is used to get the current user's response
+                                HttpServletResponse response) throws TutorialNotFoundException {   //@AuthenticationPrincipal is used to get the current users details
 
         User logedInUser= userRepository.findByUsername(userDetails.getUsername()).orElse(null);
-
         userService.deleteUser(logedInUser);
 
-        //--- logout ---
+        // --- logout ---
 
-        //get the current user's authentication
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        //securityContextLogoutHandler is used to log out the current user
-        SecurityContextLogoutHandler securityContextLogoutHandler = new SecurityContextLogoutHandler();  //
+        SecurityContextLogoutHandler securityContextLogoutHandler= new SecurityContextLogoutHandler();
 
-        if (authentication != null) {
-            securityContextLogoutHandler.logout(request, response, authentication);
+        if(authentication != null){
+            securityContextLogoutHandler.logout(request,response,authentication);
         }
 
         return "redirect:/";
+
     }
+
+
+    //ResponseEntity is used in Spring Boot to return structured and flexible responses from REST APIs
+    @GetMapping("/all")
+    public ResponseEntity<List<User>> getAllUsers(){
+
+        List<User> allUsers= userRepository.findAll();
+
+        allUsers.remove(0); //remove the admin
+
+        return ResponseEntity.ok(allUsers);
+
+    }
+
+
+
+    @GetMapping("/removeByAdmin/{id}")
+    public String removeUserByID(@PathVariable Long id){
+        userService.deleteUserById(id);
+
+        return "redirect:/";
+    }
+
 
 
 }

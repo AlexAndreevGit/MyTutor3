@@ -1,45 +1,50 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, {useEffect, useState} from "react";
+import {addCsrfTokenToForm1, addCsrfTokenToForm2} from "./Utils";
+import {Link} from "react-router-dom";
 
-function Register() {
-    const [formData, setFormData] = useState({
+function Register(){
+
+    //the useState hook os used to control the state of the React component
+    const[formData, setFormData] = useState({
         username: '',
-        email: '',
-        password: '',
-        confirmPassword: ''
-    });
-    const [errors, setErrors] = useState({});
+        email:'',
+        designation:'',
+        password:'',
+        confirmPassword:''
+    })
 
+    function handleCheckboxChange(role) {
+        setFormData(prev => ({
+            ...prev,
+            designation: prev.designation === role ? "" : role // deselect if clicked again
+        }));
+    }
 
-    const handleChange = (e) => {
-        const { name, value } = e.target;
+    //handle change is a function triggered every time when the user types in the input field because each field contains an onChange event onChange={handleChange}
+    function handleChange(event) {
+
+        // Get the input's name (like "email") and value (like "alice@example.com")
+        const inputName = event.target.name;     //inputName contains the name of the input field that triggered the event, e.g. "username", "email", etc.
+        const inputValue = event.target.value;  //inputValue contains the current value of the feald
+
         setFormData({
-            ...formData,
-            [name]: value
-        });
-    };
+            ...formData,    //... means "spread operator" - it copies all properties from formData
+            [inputName]: inputValue
+        })
+
+    }
+
+    //the useEffect hook is updated every time the formData state is updated
+    useEffect(() => {
+        console.log(formData)
+    }, [formData]);
 
 
     useEffect(() => {
-        fetch('/api/csrf')
-            .then(response => response.json())
-            .then(data => {
-
-                const form = document.querySelector('form[action="/users/register"]');
-                if (form && data.token) {
-
-
-                    const csrfInput = document.createElement('input');
-                    csrfInput.type = 'hidden';
-                    csrfInput.name = data.parameterName;
-                    csrfInput.value = data.token;
-                    form.appendChild(csrfInput);
-                }
-            })
-            .catch(error => console.error('Could not fetch CSRF token:', error));
+        addCsrfTokenToForm2("/users/register")
     }, []);
 
-    return (
+    return(
         <main className="container py-4">
             <div className="form-container">
                 <div className="form-icon">
@@ -51,74 +56,101 @@ function Register() {
                     <p className="form-subtitle">Join our tutoring community today</p>
                 </div>
 
+                <form id="registerFormID" action="/users/register" method="POST">
 
-                <form action="/users/register" method="POST">
                     <div className="form-group">
                         <label className="form-label" htmlFor="username">Username</label>
                         <input
                             type="text"
-                            className={`form-control ${errors.username ? 'is-invalid' : ''}`}
-                            id="username"
+                            className="form-control"
+                            id="username"  //works together with htmlFor="username". we click on the label and the input field gets focused
                             name="username"
                             placeholder="Choose a username"
                             value={formData.username}
                             onChange={handleChange}
-                            required
+                            required //the browser prevent the form to be send unless the field is filled in
                         />
-                        {errors.username && (
-                            <small className="invalid-feedback">Username length must be between 2 and 40 characters!</small>
-                        )}
                     </div>
 
                     <div className="form-group">
                         <label className="form-label" htmlFor="email">Email</label>
                         <input
                             type="email"
-                            className={`form-control ${errors.email ? 'is-invalid' : ''}`}
-                            id="email"
+                            className="form-control"
+                            id="email"  //works together with htmlFor="username". we click on the label and the input field gets focused
                             name="email"
                             placeholder="Enter your email address"
                             value={formData.email}
                             onChange={handleChange}
-                            required
+                            required //the browser prevent the form to be send unless the field is filled in
                         />
-                        {errors.email && (
-                            <small className="invalid-feedback">Email can't be empty!</small>
-                        )}
+                    </div>
+
+                    <div className="form-group">
+
+                        <input
+                            type="hidden"
+                            name="designation"
+                            value={formData.designation}/>
+
+                        <div className="form-group">
+                            <label className="form-label">Your designation:</label>
+
+                            <div className="form-check">
+                                <input
+                                    type="checkbox"
+                                    className="form-check-input"
+                                    id="studentCheckbox"
+                                    checked={formData.designation === "student"}
+                                    onChange={() => handleCheckboxChange("student")}
+                                />
+                                <label className="form-check-label" htmlFor="studentCheckbox">
+                                    I want to be a Student
+                                </label>
+                            </div>
+
+                            <div className="form-check">
+                                <input
+                                    type="checkbox"
+                                    className="form-check-input"
+                                    id="tutorCheckbox"
+                                    checked={formData.designation === "tutor"}
+                                    onChange={() => handleCheckboxChange("tutor")}
+                                />
+                                <label className="form-check-label" htmlFor="tutorCheckbox">
+                                    I want to be a Tutor
+                                </label>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div className="form-group">
                         <label className="form-label" htmlFor="password">Password</label>
                         <input
                             type="password"
-                            className={`form-control ${errors.password ? 'is-invalid' : ''}`}
-                            id="password"
+                            className="form-control"
+                            id="password"  //works together with htmlFor="username". we click on the label and the input field gets focused
                             name="password"
                             placeholder="Create a password"
                             value={formData.password}
                             onChange={handleChange}
-                            required
+                            required //the browser prevent the form to be send unless the field is filled in
                         />
-                        {errors.password && (
-                            <small className="invalid-feedback">Password length must be between 2 and 40 characters!</small>
-                        )}
                     </div>
 
                     <div className="form-group">
                         <label className="form-label" htmlFor="confirmPassword">Confirm Password</label>
                         <input
                             type="password"
-                            className={`form-control ${errors.confirmPassword ? 'is-invalid' : ''}`}
-                            id="confirmPassword"
+                            className="form-control"
+                            id="confirmPassword"  //works together with htmlFor="username". we click on the label and the input field gets focused
                             name="confirmPassword"
                             placeholder="Confirm your password"
                             value={formData.confirmPassword}
                             onChange={handleChange}
-                            required
+                            required //the browser prevent the form to be send unless the field is filled in
                         />
-                        {errors.confirmPassword && (
-                            <small className="invalid-feedback">Passwords must match!</small>
-                        )}
                     </div>
 
                     <div className="form-actions">
@@ -130,10 +162,14 @@ function Register() {
                     <div className="form-footer">
                         Already have an account? <Link to="/users/login">Sign in</Link>
                     </div>
+
                 </form>
+
             </div>
         </main>
-    );
+
+    )
+
 }
 
 export default Register;

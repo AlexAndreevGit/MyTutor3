@@ -3,144 +3,171 @@ import {Link} from "react-router-dom";
 import {sentFormWithCSRFToURL} from "./Utils";
 
 
-function MyInformation(){
+function MyInformation (){
 
+    //useState hook used to set the state of the functional component
     const[userInfo, setUserInfo] = useState({
         userName:'',
         userEmail:'',
         numberOfClasses:'0',
         averagePriceEUR:'0.0',
+        averagePriceBGN:'0.0',
+        designation:'',
         submittedTutoringOffersAsAView:[]
         })
 
+    //a hook used to fetch information from the backend to the frontend
     useEffect(() => {
-        fetch('/api/users/my-information2')
-            .then(data => data.json())
+        fetch('/api/users/my-information2')   //the fetch method returns a Response Object
+            .then(data=>data.json())   //the.json() method is called to parse the Response Object to JSON
             .then(result => setUserInfo(result))
 
     }, []);
 
+    //a hook that is executed every time the userInfo state is updated
     useEffect(() => {
-        console.log('Updated userInfo:', userInfo);
+        console.log("User Information")
+        console.log(userInfo)
     }, [userInfo]);
 
-
+    //e is the event object passed to the function when the button is clicked
+    //the even object is containing information about the event that occurred like the target element which in this case is the button
     function handleDeleteAccount(e) {
         e.preventDefault()
 
-        sentFormWithCSRFToURL("/users/delete-account")
-        console.log("here !!")
+        if(window.confirm("Are you sure you want to delete your account? This action cannot be undone.")){
+            sentFormWithCSRFToURL("/users/delete-account")
+        }
     }
 
     return(
-        <main className="container py-4" style={{maxWidth: "900px"}}>
 
-            {/*icon, username, email*/}
-            <div className="div-main" style={{ textAlign: 'center' }}>
+        <main className="container py-4" style={{maxWidth:"900px"}}>
+
+
+                {/*icon, username, email*/}
+                <div className="div-main" style={{textAlign: 'center'}}>
                     <div className="profile-avatar">
                         <i className="fas fa-user-circle"></i>
                     </div>
                     <h1 className="profile-title">{userInfo.userName}</h1>
                     <p className="profile-subtitle">{userInfo.userEmail}</p>
-            </div>
+                    <p className="profile-subtitle">{userInfo.designation}</p>
 
-            {/*number of classes*/}
-            <div className="div-main" style={{ display: "flex", gap: "1rem" }}>
-                <div className="stat-card" style={{ flex: 1 }}>
-                    <div className="stat-icon">
-                        <i className="fas fa-book"></i>
+                </div>
+
+                {/*number of classes*/}
+                <div className="div-main" style={{display: "flex", gap: "1rem"}}>
+                    <div className="stat-card" style={{flex: 1}}>
+                        <div className="stat-icon">
+                            <i className="fas fa-book"></i>
+                        </div>
+                        <div className="stat-content">
+                            <h3 className="stat-value">{userInfo.numberOfClasses}</h3>
+                            <p className="stat-label">Classes</p>
+                        </div>
                     </div>
-                    <div className="stat-content">
-                        <h3 className="stat-value">{userInfo.numberOfClasses}</h3>
-                        <p className="stat-label">Classes</p>
+
+                    <div className="stat-card" style={{flex: 1}}>
+                            <div className="stat-icon">
+                                <i className="fas fa-book"></i>
+                            </div>
+                        <div className="stat-content">
+                            <h3 className="stat-value">{userInfo.averagePriceEUR}</h3>
+                            <h3 className="stat-value">EUR</h3>
+                            <p className="stat-label">Avg. Price (EUR)</p>
+                        </div>
+                    </div>
+
+                    <div className="stat-card" style={{flex: 1}}>
+                        <div className="stat-icon">
+                            <i className="fas fa-book"></i>
+                        </div>
+                        <div className="stat-content">
+                            <h3 className="stat-value">{userInfo.averagePriceBGN}</h3>
+                            <h3 className="stat-value">Lev</h3>
+                            <p className="stat-label">Avg. Price (BGN)</p>
+                        </div>
                     </div>
                 </div>
 
-                <div className="stat-card" style={{ flex: 1 }}>
-                    <div className="stat-icon">
-                        <i className="fas fa-euro-sign"></i>
+                {/*tutorials list*/}
+                <div className="div-main">
+                    <div className="section-header">
+                        <h2 className="section-title">
+                            My Tutoring Offers
+                        </h2>
+
+                        <Link to="/tutorials/add" className="btn-action secondary">
+                            <i className="fas fa-plus-circle" style={{marginRight: "0.5rem"}}></i> Add New Offer
+                        </Link>
                     </div>
-                    <div className="stat-content">
-                        <h3 className="stat-value">{userInfo.averagePriceEUR}</h3>
-                        <p className="stat-label">Avg. Price (EUR)</p>
-                    </div>
-                </div>
-            </div>
 
-            {/*tutorials list*/}
-            <div className="div-main">
-                <div className="section-header">
-                    <h2 className="section-title">
-                        My Tutoring Offers
-                    </h2>
-
-                    <Link to="/tutorials/add" className="btn-action secondary">
-                        <i className="fas fa-plus-circle" style={{ marginRight: "0.5rem" }}></i>Add New Offer
-                    </Link>
-                </div>
-
-                <div className="offers-list">
-                    {userInfo.submittedTutoringOffersAsAView.length > 0 ? (
-                        userInfo.submittedTutoringOffersAsAView.map((offer) => (
-                            <div key={offer.id} className="user-offer-card">
-                                <div className="offer-card-header">
-                                    <h3 className="offer-name">{offer.name}</h3>
-                                    <div className="offer-price">
-                                        <span>{offer.price}</span>
-                                        <span className="price-currency">EUR</span>
+                    <div className="offers-list">
+                        {userInfo.submittedTutoringOffersAsAView?.length > 0 ? (
+                            userInfo.submittedTutoringOffersAsAView.map((offer)=>(
+                                <div key={offer.id} className="user-offer-card">
+                                    <div className="offer-card-header">
+                                        <h3 className="offer-name">{offer.name}</h3>
+                                        <div className="offer-price">
+                                            <span>{offer.price}</span>
+                                            <span className="price-currency">EUR</span>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <div className="offer-description">
-                                    <p>{offer.description}</p>
-                                </div>
+                                    <div className="offer-description">
+                                        <p>{offer.description}</p>
+                                    </div>
 
                                 <div className="offer-actions">
                                     <a
                                         className="btn-delete"
-                                        href="#"
-                                        onClick={(e) => {
-                                            e.preventDefault();
-                                            if (window.confirm('Are you sure you want to remove this offer?')) {
-                                                window.location.href = `/tutorials/remove/${offer.id}`;  //window.location.href is the current address of the page. Assigning a new value to it causes the browser to navigate to that URL
+                                        href="#"   //placeholder because we dont have actual link
+                                        onClick={(e)=>{
+                                            e.preventDefault()
+                                            if(window.confirm("Are you sure you want to remove this offer?")){
+                                                window.location.href = `/tutorials/remove/${offer.id}`  //window.location.href is the current address of the page.Assigning a new value to it causes the browser to navigate to the URL
                                             }
                                         }}
                                     >
                                         <i className="fas fa-trash-alt" style={{marginRight: '8px'}}></i> Remove
                                     </a>
+
                                 </div>
 
+
+                                </div>
+
+
+                            ))) : (
+                            <div>
+                                <i className="fas fa-search fa-3x mb-3"></i>
+                                <h3>No tutoring offers available</h3>
+                                <p>Add a new tutoring offer to get started. </p>
                             </div>
-                        ))) : (
-                        <div className="no-offers">
-                            <i className="fas fa-search fa-3x mb-3"></i>
-                            <h3>No tutoring offers available</h3>
-                            <p>Add a new tutoring offer to get started.</p>
-                        </div>
-                    )}
+                        )}
+                    </div>
+
                 </div>
 
-            </div>
 
-            {/*delate accont*/}
+                {/*delate accont*/}
             <div className="div-main"
                  style={{display: "flex", justifyContent: "space-between", alignItems: "center", padding: "1rem 1rem"}}>
                 <p className="subject-description" style={{paddingTop: '1.2rem'}}>
                     Account termination is permanent and cannot be undone.
                 </p>
 
-                <button
-                    className="button-delete-account"
-                    onClick={handleDeleteAccount}
-                >
+                <button className="button-delete-account" onClick={handleDeleteAccount}>
                     <i className="fas fa-trash-alt" style={{marginRight: '8px'}}></i> Delete account
                 </button>
+
             </div>
 
         </main>
-    )
 
+    )
 
 }
 
-export default MyInformation;
+export default MyInformation

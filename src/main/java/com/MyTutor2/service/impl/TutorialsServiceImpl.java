@@ -81,6 +81,8 @@ public class TutorialsServiceImpl implements TutorialsService {
 
         tutoringOffer.setCategory(category);
 
+        tutoringOffer.setCreatedOn(java.time.LocalDate.now());
+
         tutoringRepository.save(tutoringOffer);
 
         LOGGER.info("A new tutoring offer was added by {}.", userName);

@@ -1,15 +1,40 @@
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import React, {useEffect} from "react";
+import {Link} from "react-router-dom";
 
-function Header({ isAuthenticated, isAdmin, handleLogout }) {
+function Header({isAuthenticated,isAdmin, handleLogout}){
 
-    return (
+
+    // Function to fetch weather data
+
+
+    // const fetchWeatherData = () => {
+    //
+    // }
+
+    useEffect(() => {
+        fetch('/weather/berlin')
+            .then(response=>{
+                return response.json()
+            }).then(data => {
+            //tace the weather data and update the UI
+            const cityElement = document.getElementById('weather-city');
+            const tempElement = document.getElementById('weather-temp');
+
+            console.log(data)
+
+            cityElement.textContent= data.city;
+            tempElement.textContent= `${data.template} °C`
+
+        })
+    }, []);
+
+
+    return(
         <header>
-
             <nav className="navbar navbar-expand-lg navbar-light modern-navbar">
                 <Link className="navbar-brand" to="/home">
                     <i className="fas fa-chalkboard-teacher brand-icon"></i>
-                    <span className="brand-text">MyTutor</span>
+                    <span className="brand-text">MyTutor 3</span>
                 </Link>
 
                 <ul className="navbar-nav me-auto mb-2 mb-lg-0">
@@ -18,7 +43,6 @@ function Header({ isAuthenticated, isAdmin, handleLogout }) {
                             <i className="fas fa-home nav-icon"></i> Home
                         </Link>
                     </li>
-
 
                     {isAuthenticated && (
                         <>
@@ -42,7 +66,7 @@ function Header({ isAuthenticated, isAdmin, handleLogout }) {
 
                             <li className="nav-item">
                                 <Link className="nav-link-button" to="/tutorials/other">
-                                    <i className="fas fa-chart-line nav-icon"></i> Other subjects
+                                    <i className="fas fa-book nav-icon"></i> Other subjects
                                 </Link>
                             </li>
                         </>
@@ -75,10 +99,12 @@ function Header({ isAuthenticated, isAdmin, handleLogout }) {
                                     <i className="fas fa-user nav-icon"></i> My Information
                                 </Link>
                             </li>
+
                         </>
                     )}
-                </ul>
 
+
+                </ul>
 
                 <div className="d-flex">
                     <ul className="navbar-nav">
@@ -97,19 +123,26 @@ function Header({ isAuthenticated, isAdmin, handleLogout }) {
                                 </li>
                             </>
                         ) : (
-                            <li className="nav-item">
-                                <button className="btn-logout" onClick={handleLogout}>
-                                    <i className="fas fa-sign-out-alt nav-icon"></i> Logout
-                                </button>
-                            </li>
+                            <>
+                                <div className="weather-information">
+                                    <h3 style={{marginRight:"10px"}}>City: <span id="weather-city"></span></h3>
+                                    <h3>Temp: <span id="weather-temp"></span></h3>
+                                </div>
+
+                                <li className="nav-item">
+                                    <button className="btn-logout" onClick={handleLogout}>
+                                        <i className="fas fa-sign-out-alt nav-icon"></i> Logout
+                                    </button>
+                                </li>
+                            </>
                         )}
                     </ul>
                 </div>
 
             </nav>
-
         </header>
-    );
+    )
+
 }
 
 export default Header;

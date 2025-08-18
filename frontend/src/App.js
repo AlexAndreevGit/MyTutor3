@@ -1,20 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import Home from './components/Home';
-import About from './components/About';
-import Login from './components/Login';
-import Register from './components/Register';
+// import Login from './components/Login';
+// import Register from './components/Register';
 import Layout from './components/Layout';
-import InformaticsTutorials from './components/InformaticsTutorials';
+// import InformaticsTutorials from './components/InformaticsTutorials';
 import MathTutorials from './components/MathTutorials';
 import OtherTutorials from './components/OtherTutorials';
-import TutorialAdd from './components/TutorialAdd';
-import AskGPTQuestion from "./components/AskGPTQuestion";
+// import TutorialAdd from './components/TutorialAdd';
+// import AskGPTQuestion from "./components/AskGPTQuestion";
+import AboutUs from "./components/AboutUs";
 import MyInformation from "./components/MyInformation";
+// import MyInformation from "./components/MyInformation";
+import Register from "./components/Register";
+import TutorialAdd from "./components/TutorialAdd";
+import InformaticsTutorials from "./components/InformaticsTutorials";
+import Login from "./components/Login";
+import AskGPTQuestion from "./components/AskGPTQuestion";
+import AboutUs2 from "./components/Statistics";
 
 
 function AppContent() {
-
 
     const [isAuthenticated, setIsAuthenticated] = useState(false);
     const [isAdmin, setIsAdmin] = useState(false);
@@ -31,11 +37,11 @@ function AppContent() {
                     setIsAdmin(false);
                 }
             })
-            .catch(error => {
-                console.error('Error checking authentication status:', error);
-                setIsAuthenticated(false);
-                setIsAdmin(false);
-            });
+            // .catch(error => {
+            //     console.error('Error checking authentication status:', error);
+            //     setIsAuthenticated(false);
+            //     setIsAdmin(false);
+            // });
     };
 
 
@@ -45,14 +51,15 @@ function AppContent() {
 
     return (
 
+        //The "children" prop is a specific prop that is automatically passed to a component when you nest elements inside it.
+        //Everything under Routes is automatically passed to children
         <Layout isAuthenticated={isAuthenticated} isAdmin={isAdmin}>
-
 
             {/*Routes is a routing library.*/}
             <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/home" element={<Home />} />
-                <Route path="/about-us" element={<About />} />
+                <Route path="/about-us" element={<AboutUs />} />
 
                 <Route path="/users/login" element={<Login />} />
                 <Route path="/users/login-error" element={<Login />} />
@@ -63,7 +70,9 @@ function AppContent() {
                 <Route path="/tutorials/math" element={<MathTutorials />} />
                 <Route path="/tutorials/other" element={<OtherTutorials />} />
                 <Route path="/tutorials/add" element={<TutorialAdd />} />
-                <Route path="/tutorials/ask-question" element={<AskGPTQuestion/>}/>
+                <Route path="/tutorials/ask-question" element={<AskGPTQuestion />}/>
+
+                <Route path="/admin/statistics" element={<AboutUs2 />}/>
 
             </Routes>
         </Layout>

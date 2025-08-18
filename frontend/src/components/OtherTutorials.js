@@ -1,4 +1,5 @@
 import React from 'react';
+// import TutorialsOffersList from "./TutorialsOffersList";
 import TutorialsOffersList from "./TutorialsOffersList";
 
 function OtherTutorials() {
